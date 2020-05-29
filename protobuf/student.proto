@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+service Student {
+  rpc SearchStudent (StudentRequest) returns (StudentResponse);
+  rpc IndexStudent (IndexStudentRequest) returns (IndexStudentResponse);
+}
+
+message StudentRequest {
+  string keyword = 1;
+}
+
+message StudentResponse {
+  repeated uint64 ids = 1;
+}
+
+message IndexStudentRequest {
+  string name = 1;
+  int32 age = 2;
+  string id = 3;
+}
+
+message IndexStudentResponse {
+  string message = 1;
+}
