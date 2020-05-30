@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	pb "source/mix/protobuf"
-	"source/mix/server/DB"
-	"time"
+	"source/mix/server/entity"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,8 +18,7 @@ func GetStudents(c *gin.Context) {
 
 	// Tạo client để gọi phương thức từ RPC
 	client := pb.NewStudentClient(conn)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	ctx := context.Background()
 
 	// for search
 	studentRequest := pb.StudentRequest{
@@ -81,8 +79,7 @@ func CreateStudent(c *gin.Context) {
 
 	// Tạo client để gọi phương thức từ RPC
 	client := pb.NewStudentClient(conn)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	ctx := context.Background()
 
 	// Gọi hàm tìm kiếm student từ RPC
 	indexResponse, err := client.IndexStudent(ctx, &indexRequest)
@@ -93,42 +90,4 @@ func CreateStudent(c *gin.Context) {
 		"code": http.StatusOK,
 		"data": student,
 	})
-}
-
-func Create10000(c *gin.Context) {
-	// Kết nối đến RPC
-	conn, _ := ConnectRPC()
-	defer conn.Close()
-	// Tạo client để gọi phương thức từ RPC
-	client := pb.NewStudentClient(conn)
-	ctx := context.Background()
-
-	for i := 0; i < 10000; i++ {
-		fmt.Println(i)
-
-		student := DB.Student{
-			Name: "student " + fmt.Sprint(i),
-			Age:  20,
-		}
-
-		err := student.Create()
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    http.StatusInternalServerError,
-				"message": err.Error(),
-			})
-			return
-		}
-
-		// for search
-		indexRequest := pb.IndexStudentRequest{
-			Name: student.Name,
-			Age:  (int32)(student.Age),
-			Id:   fmt.Sprint(student.ID),
-		}
-
-		// Gọi hàm tìm kiếm student từ RPC
-		indexResponse, err := client.IndexStudent(ctx, &indexRequest)
-		fmt.Println(indexResponse)
-	}
 }

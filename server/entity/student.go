@@ -15,8 +15,8 @@ func (list *ListStudents) GetAllByIDs(ids []uint64) error {
 		return err
 	}
 
-	db.Where("id IN(?)", ids).Find(list)
-	return nil
+	return db.Where("id IN(?)", ids).Find(list).Error
+	// return nil
 }
 
 func (this *Student) Create() error {

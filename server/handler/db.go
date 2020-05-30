@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"source/mix/server/DB"
+	"source/mix/server/entity"
 )
 
 func MigrateDB() {
