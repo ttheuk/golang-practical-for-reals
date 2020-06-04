@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	pb "protobuf"
+	pb "rpc"
 	"strconv"
 	"time"
 
@@ -68,6 +68,11 @@ func CreateIndex(newStudent *pb.IndexStudentRequest) {
 
 // Search
 func Search(keyword string) []uint64 {
+	exist, err := client.IndexExists(indexName).Do(ctx)
+	if !exist || err != nil {
+		return []uint64{}
+	}
+
 	var ids []uint64
 	// Search theo trường name
 	matchQuery := elastic.NewMatchQuery("name", keyword)
@@ -80,7 +85,7 @@ func Search(keyword string) []uint64 {
 	}
 
 	res, err := client.Search().
-		Index("students").
+		Index(indexName).
 		Query(generalQuery).
 		From(0).Size(10000).
 		Do(ctx)

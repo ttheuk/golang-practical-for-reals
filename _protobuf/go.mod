@@ -1,4 +1,4 @@
-module source/mix/protobuf
+module source/my-clean-arch/rpc
 
 go 1.13
 

@@ -2,22 +2,30 @@ package handler
 
 import (
 	"context"
+	"entity"
 	"fmt"
-	"net/http"
-	pb "source/mix/protobuf"
-	"source/mix/server/entity"
+	"repository/student"
+	pb "rpc"
 
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 )
 
-// Lấy danh sách students
-func GetStudents(c *gin.Context) {
-	// Kết nối đến RPC
-	conn, _ := ConnectRPC()
-	defer conn.Close()
+type StudentHandler struct {
+	service student.Service
+	conn    *grpc.ClientConn
+}
 
+func NewStudentHandler(repo student.StudentRepository, rpc *grpc.ClientConn) *StudentHandler {
+	return &StudentHandler{
+		service: *student.NewService(repo),
+		conn:    rpc,
+	}
+}
+
+func (h *StudentHandler) GetStudents(c *gin.Context) {
 	// Tạo client để gọi phương thức từ RPC
-	client := pb.NewStudentClient(conn)
+	client := pb.NewStudentClient(h.conn)
 	ctx := context.Background()
 
 	// for search
@@ -29,48 +37,41 @@ func GetStudents(c *gin.Context) {
 	studentResponse, err := client.SearchStudent(ctx, &studentRequest)
 
 	// Lấy danh sách student trong database theo các id nhận được
-	listStudents := DB.ListStudents{}
-	err = listStudents.GetAllByIDs(studentResponse.Ids)
+	data, err := h.service.GetAllById(studentResponse.Ids)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    http.StatusInternalServerError,
+		c.JSON(500, gin.H{
+			"code":    500,
 			"message": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": http.StatusOK,
-		"data": listStudents,
+	c.JSON(200, gin.H{
+		"code": 200,
+		"data": data,
 	})
 }
 
-// Tạo 1 dòng dữ liệu students
-func CreateStudent(c *gin.Context) {
-	student := DB.Student{}
+func (h *StudentHandler) CreateStudent(c *gin.Context) {
+	student := entity.Student{}
 	if err := c.ShouldBind(&student); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
+		c.JSON(400, gin.H{
+			"code":    400,
 			"message": err.Error(),
 		})
 		return
 	}
 
-	err := student.Create()
+	err := h.service.Create(&student)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    http.StatusInternalServerError,
+		c.JSON(500, gin.H{
+			"code":    500,
 			"message": err.Error(),
 		})
 		return
 	}
 
-	// Kết nối đến RPC
-	conn, _ := ConnectRPC()
-	defer conn.Close()
-
-	// for search
 	indexRequest := pb.IndexStudentRequest{
 		Name: student.Name,
 		Age:  (int32)(student.Age),
@@ -78,16 +79,15 @@ func CreateStudent(c *gin.Context) {
 	}
 
 	// Tạo client để gọi phương thức từ RPC
-	client := pb.NewStudentClient(conn)
+	client := pb.NewStudentClient(h.conn)
 	ctx := context.Background()
 
 	// Gọi hàm tìm kiếm student từ RPC
 	indexResponse, err := client.IndexStudent(ctx, &indexRequest)
 	fmt.Println(indexResponse)
 
-	// Tạo thành công
-	c.JSON(http.StatusOK, gin.H{
-		"code": http.StatusOK,
+	c.JSON(200, gin.H{
+		"code": 200,
 		"data": student,
 	})
 }

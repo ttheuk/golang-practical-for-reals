@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
-	pb "protobuf"
+	pb "rpc"
 
 	"google.golang.org/grpc"
 )
