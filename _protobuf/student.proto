@@ -3,6 +3,7 @@ syntax = "proto3";
 service Student {
   rpc SearchStudent (StudentRequest) returns (StudentResponse);
   rpc IndexStudent (IndexStudentRequest) returns (IndexStudentResponse);
+  rpc ExportXLSX(IndexStudentRequest) returns (IndexStudentResponse);
 }
 
 message StudentRequest {

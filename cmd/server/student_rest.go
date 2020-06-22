@@ -12,8 +12,8 @@ func NewStudentHandler(e *gin.Engine) *gin.Engine {
 	h := handler.NewStudentHandler(*repo, rpc)
 
 	e.GET("/students", h.GetStudents)
+	e.GET("/students/xlsx", h.ExportXLSX)
 	e.POST("/students", h.CreateStudent)
-	// e.PUT("/students", h.Update)
 	// e.DELETE("/students", h.Delete)
 
 	return e

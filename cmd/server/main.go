@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,10 @@ import (
 func init() {
 	if err := SetupServer(); err != nil {
 		log.Print(err)
+		return
 	}
+	fmt.Println("=> initiate server: successful")
+
 }
 
 func main() {

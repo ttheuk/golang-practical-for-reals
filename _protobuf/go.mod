@@ -1,4 +1,4 @@
-module source/my-clean-arch/rpc
+module source/golang-practical-for-reals/_protobuf
 
 go 1.13
 

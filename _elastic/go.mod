@@ -1,4 +1,4 @@
-module source/my-clean-arch/_elastic
+module source/golang-practical-for-reals/_elastic
 
 go 1.13
 

@@ -27,3 +27,7 @@ func (s *Service) Create(student *entity.Student) error {
 func (s *Service) Delete(id uint64) error {
 	return s.repo.Delete(id)
 }
+
+func (s *Service) ExportXLSX() (*entity.ListStudent, error) {
+	return s.repo.ExportXLSX()
+}
