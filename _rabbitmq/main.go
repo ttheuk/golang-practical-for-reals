@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/streadway/amqp"
@@ -63,7 +64,13 @@ func main() {
 
 	go func() {
 		for d := range msgs {
-			log.Printf(" [x] %s", d.Body)
+			switch string(d.Body) {
+			case "export_xlsx":
+				{
+					fmt.Println("export")
+					s.ExportXLSX()
+				}
+			}
 		}
 	}()
 

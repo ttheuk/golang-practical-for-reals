@@ -5,6 +5,7 @@ go 1.13
 replace rpc => ../_protobuf
 
 require (
+	github.com/360EntSecGroup-Skylar/excelize v1.4.1
 	github.com/olivere/elastic v6.2.31+incompatible
 	github.com/olivere/elastic/v7 v7.0.15
 	google.golang.org/grpc v1.29.1

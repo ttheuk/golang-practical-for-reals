@@ -30,6 +30,11 @@ func (s *server) IndexStudent(ctx context.Context, r *pb.IndexStudentRequest) (*
 	return &data, nil
 }
 
+func (s *server) ExportXLSX(ctx context.Context, r *pb.XlsxRequest) (*pb.XlsxResponse, error) {
+	res, err := ExportXLSX(r)
+	return res, err
+}
+
 func init() {
 	InitElastic()
 }

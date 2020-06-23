@@ -8,15 +8,14 @@ package student
 
 import (
 	context "context"
-	reflect "reflect"
-	sync "sync"
-
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -234,6 +233,187 @@ func (x *IndexStudentResponse) GetMessage() string {
 	return ""
 }
 
+type XlsxRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Students []*XlsxRequest_Student `protobuf:"bytes,4,rep,name=students,proto3" json:"students,omitempty"`
+	Path     string                 `protobuf:"bytes,5,opt,name=path,proto3" json:"path,omitempty"`
+	FileName string                 `protobuf:"bytes,6,opt,name=fileName,proto3" json:"fileName,omitempty"`
+}
+
+func (x *XlsxRequest) Reset() {
+	*x = XlsxRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_student_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *XlsxRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*XlsxRequest) ProtoMessage() {}
+
+func (x *XlsxRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_student_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use XlsxRequest.ProtoReflect.Descriptor instead.
+func (*XlsxRequest) Descriptor() ([]byte, []int) {
+	return file_student_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *XlsxRequest) GetStudents() []*XlsxRequest_Student {
+	if x != nil {
+		return x.Students
+	}
+	return nil
+}
+
+func (x *XlsxRequest) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *XlsxRequest) GetFileName() string {
+	if x != nil {
+		return x.FileName
+	}
+	return ""
+}
+
+type XlsxResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Message string `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Path    string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+}
+
+func (x *XlsxResponse) Reset() {
+	*x = XlsxResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_student_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *XlsxResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*XlsxResponse) ProtoMessage() {}
+
+func (x *XlsxResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_student_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use XlsxResponse.ProtoReflect.Descriptor instead.
+func (*XlsxResponse) Descriptor() ([]byte, []int) {
+	return file_student_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *XlsxResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *XlsxResponse) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+type XlsxRequest_Student struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Age  int32  `protobuf:"varint,2,opt,name=age,proto3" json:"age,omitempty"`
+	Id   string `protobuf:"bytes,3,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *XlsxRequest_Student) Reset() {
+	*x = XlsxRequest_Student{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_student_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *XlsxRequest_Student) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*XlsxRequest_Student) ProtoMessage() {}
+
+func (x *XlsxRequest_Student) ProtoReflect() protoreflect.Message {
+	mi := &file_student_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use XlsxRequest_Student.ProtoReflect.Descriptor instead.
+func (*XlsxRequest_Student) Descriptor() ([]byte, []int) {
+	return file_student_proto_rawDescGZIP(), []int{4, 0}
+}
+
+func (x *XlsxRequest_Student) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *XlsxRequest_Student) GetAge() int32 {
+	if x != nil {
+		return x.Age
+	}
+	return 0
+}
+
+func (x *XlsxRequest_Student) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 var File_student_proto protoreflect.FileDescriptor
 
 var file_student_proto_rawDesc = []byte{
@@ -250,19 +430,33 @@ var file_student_proto_rawDesc = []byte{
 	0x02, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x30, 0x0a,
 	0x14, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73,
 	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x32,
-	0xb5, 0x01, 0x0a, 0x07, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x12, 0x32, 0x0a, 0x0d, 0x53,
-	0x65, 0x61, 0x72, 0x63, 0x68, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x12, 0x0f, 0x2e, 0x53,
-	0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x10, 0x2e,
-	0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x3b, 0x0a, 0x0c, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x12,
-	0x14, 0x2e, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x53, 0x74, 0x75,
-	0x64, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x39, 0x0a, 0x0a,
-	0x45, 0x78, 0x70, 0x6f, 0x72, 0x74, 0x58, 0x4c, 0x53, 0x58, 0x12, 0x14, 0x2e, 0x49, 0x6e, 0x64,
-	0x65, 0x78, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x15, 0x2e, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22,
+	0xb0, 0x01, 0x0a, 0x0b, 0x58, 0x6c, 0x73, 0x78, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x30, 0x0a, 0x08, 0x73, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x14, 0x2e, 0x58, 0x6c, 0x73, 0x78, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e,
+	0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52, 0x08, 0x73, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74,
+	0x73, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x61, 0x74, 0x68, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x04, 0x70, 0x61, 0x74, 0x68, 0x12, 0x1a, 0x0a, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x4e, 0x61, 0x6d,
+	0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x4e, 0x61, 0x6d,
+	0x65, 0x1a, 0x3f, 0x0a, 0x07, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x12, 0x10, 0x0a, 0x03, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x03, 0x61,
+	0x67, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02,
+	0x69, 0x64, 0x22, 0x3c, 0x0a, 0x0c, 0x58, 0x6c, 0x73, 0x78, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x12, 0x0a, 0x04,
+	0x70, 0x61, 0x74, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x70, 0x61, 0x74, 0x68,
+	0x32, 0xa5, 0x01, 0x0a, 0x07, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x12, 0x32, 0x0a, 0x0d,
+	0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x12, 0x0f, 0x2e,
+	0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x10,
+	0x2e, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x3b, 0x0a, 0x0c, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74,
+	0x12, 0x14, 0x2e, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x53, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x53, 0x74,
+	0x75, 0x64, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x29, 0x0a,
+	0x0a, 0x45, 0x78, 0x70, 0x6f, 0x72, 0x74, 0x58, 0x4c, 0x53, 0x58, 0x12, 0x0c, 0x2e, 0x58, 0x6c,
+	0x73, 0x78, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0d, 0x2e, 0x58, 0x6c, 0x73, 0x78,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -277,25 +471,29 @@ func file_student_proto_rawDescGZIP() []byte {
 	return file_student_proto_rawDescData
 }
 
-var file_student_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_student_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_student_proto_goTypes = []interface{}{
 	(*StudentRequest)(nil),       // 0: StudentRequest
 	(*StudentResponse)(nil),      // 1: StudentResponse
 	(*IndexStudentRequest)(nil),  // 2: IndexStudentRequest
 	(*IndexStudentResponse)(nil), // 3: IndexStudentResponse
+	(*XlsxRequest)(nil),          // 4: XlsxRequest
+	(*XlsxResponse)(nil),         // 5: XlsxResponse
+	(*XlsxRequest_Student)(nil),  // 6: XlsxRequest.Student
 }
 var file_student_proto_depIdxs = []int32{
-	0, // 0: Student.SearchStudent:input_type -> StudentRequest
-	2, // 1: Student.IndexStudent:input_type -> IndexStudentRequest
-	2, // 2: Student.ExportXLSX:input_type -> IndexStudentRequest
-	1, // 3: Student.SearchStudent:output_type -> StudentResponse
-	3, // 4: Student.IndexStudent:output_type -> IndexStudentResponse
-	3, // 5: Student.ExportXLSX:output_type -> IndexStudentResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	6, // 0: XlsxRequest.students:type_name -> XlsxRequest.Student
+	0, // 1: Student.SearchStudent:input_type -> StudentRequest
+	2, // 2: Student.IndexStudent:input_type -> IndexStudentRequest
+	4, // 3: Student.ExportXLSX:input_type -> XlsxRequest
+	1, // 4: Student.SearchStudent:output_type -> StudentResponse
+	3, // 5: Student.IndexStudent:output_type -> IndexStudentResponse
+	5, // 6: Student.ExportXLSX:output_type -> XlsxResponse
+	4, // [4:7] is the sub-list for method output_type
+	1, // [1:4] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_student_proto_init() }
@@ -352,6 +550,42 @@ func file_student_proto_init() {
 				return nil
 			}
 		}
+		file_student_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*XlsxRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_student_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*XlsxResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_student_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*XlsxRequest_Student); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -359,7 +593,7 @@ func file_student_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_student_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -387,7 +621,7 @@ const _ = grpc.SupportPackageIsVersion6
 type StudentClient interface {
 	SearchStudent(ctx context.Context, in *StudentRequest, opts ...grpc.CallOption) (*StudentResponse, error)
 	IndexStudent(ctx context.Context, in *IndexStudentRequest, opts ...grpc.CallOption) (*IndexStudentResponse, error)
-	ExportXLSX(ctx context.Context, in *IndexStudentRequest, opts ...grpc.CallOption) (*IndexStudentResponse, error)
+	ExportXLSX(ctx context.Context, in *XlsxRequest, opts ...grpc.CallOption) (*XlsxResponse, error)
 }
 
 type studentClient struct {
@@ -416,8 +650,8 @@ func (c *studentClient) IndexStudent(ctx context.Context, in *IndexStudentReques
 	return out, nil
 }
 
-func (c *studentClient) ExportXLSX(ctx context.Context, in *IndexStudentRequest, opts ...grpc.CallOption) (*IndexStudentResponse, error) {
-	out := new(IndexStudentResponse)
+func (c *studentClient) ExportXLSX(ctx context.Context, in *XlsxRequest, opts ...grpc.CallOption) (*XlsxResponse, error) {
+	out := new(XlsxResponse)
 	err := c.cc.Invoke(ctx, "/Student/ExportXLSX", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -429,7 +663,7 @@ func (c *studentClient) ExportXLSX(ctx context.Context, in *IndexStudentRequest,
 type StudentServer interface {
 	SearchStudent(context.Context, *StudentRequest) (*StudentResponse, error)
 	IndexStudent(context.Context, *IndexStudentRequest) (*IndexStudentResponse, error)
-	ExportXLSX(context.Context, *IndexStudentRequest) (*IndexStudentResponse, error)
+	ExportXLSX(context.Context, *XlsxRequest) (*XlsxResponse, error)
 }
 
 // UnimplementedStudentServer can be embedded to have forward compatible implementations.
@@ -442,7 +676,7 @@ func (*UnimplementedStudentServer) SearchStudent(context.Context, *StudentReques
 func (*UnimplementedStudentServer) IndexStudent(context.Context, *IndexStudentRequest) (*IndexStudentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IndexStudent not implemented")
 }
-func (*UnimplementedStudentServer) ExportXLSX(context.Context, *IndexStudentRequest) (*IndexStudentResponse, error) {
+func (*UnimplementedStudentServer) ExportXLSX(context.Context, *XlsxRequest) (*XlsxResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExportXLSX not implemented")
 }
 
@@ -487,7 +721,7 @@ func _Student_IndexStudent_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _Student_ExportXLSX_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IndexStudentRequest)
+	in := new(XlsxRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -499,7 +733,7 @@ func _Student_ExportXLSX_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/Student/ExportXLSX",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StudentServer).ExportXLSX(ctx, req.(*IndexStudentRequest))
+		return srv.(StudentServer).ExportXLSX(ctx, req.(*XlsxRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

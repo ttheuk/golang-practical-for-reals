@@ -4,12 +4,10 @@ import (
 	"context"
 	"entity"
 	"fmt"
-	"log"
 	"repository/student"
 	pb "rpc"
 
 	"github.com/gin-gonic/gin"
-	"github.com/streadway/amqp"
 	"google.golang.org/grpc"
 )
 
@@ -101,54 +99,73 @@ func (h *StudentHandler) CreateStudent(c *gin.Context) {
 }
 
 func (h *StudentHandler) ExportXLSX(c *gin.Context) {
-	// client := pb.NewStudentClient(h.conn)
-	// ctx := context.Background()
-	list, err := h.service.ExportXLSX()
 
-	if failOnError(c, err) {
-		return
+	// conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	// if failOnError(c, err) {
+	// 	return
+	// }
+
+	// defer conn.Close()
+
+	// ch, err := conn.Channel()
+	// if failOnError(c, err) {
+	// 	return
+	// }
+
+	// defer ch.Close()
+
+	// err = ch.ExchangeDeclare("logs", "fanout", true, false, false, false, nil)
+
+	// if failOnError(c, err) {
+	// 	return
+	// }
+
+	// err = ch.Publish(
+	// 	"logs", // exchange
+	// 	"",     // routing key
+	// 	false,  // mandatory
+	// 	false,  // immediate
+	// 	amqp.Publishing{
+	// 		ContentType: "text/plain",
+	// 		Body:        []byte("export_xlsx"),
+	// 	})
+
+	// if failOnError(c, err) {
+	// 	return
+	// }
+
+	// log.Printf(" [x] Sent %s", "export_xlsx")
+
+	// Tạo client để gọi phương thức từ RPC
+	path := c.Query("path")
+	fileName := c.Query("file-name")
+
+	if fileName == "" {
+		fileName = "demo_project_file.xlsx"
 	}
 
-	fmt.Println(*list)
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	if failOnError(c, err) {
-		return
+	client := pb.NewStudentClient(h.conn)
+	ctx := context.Background()
+
+	s1 := pb.XlsxRequest_Student{Id: "sss", Name: "the", Age: 20}
+	s2 := pb.XlsxRequest_Student{Id: "eee", Name: "thanh", Age: 22}
+	s3 := pb.XlsxRequest_Student{Id: "ddd", Name: "nguyen", Age: 21}
+
+	xlsxRequest := pb.XlsxRequest{
+		// Name:     "name",
+		// Age:      4,
+		// Id:       "idnesss",
+		Students: []*pb.XlsxRequest_Student{&s1, &s2, &s3},
+		Path:     path,
+		FileName: fileName,
 	}
 
-	defer conn.Close()
+	// Gọi hàm tìm kiếm student từ RPC
+	xlsxResponse, err := client.ExportXLSX(ctx, &xlsxRequest)
+	failOnError(c, err)
 
-	ch, err := conn.Channel()
-	if failOnError(c, err) {
-		return
-	}
-
-	defer ch.Close()
-
-	err = ch.ExchangeDeclare("logs", "fanout", true, false, false, false, nil)
-
-	if failOnError(c, err) {
-		return
-	}
-
-	err = ch.Publish(
-		"logs", // exchange
-		"",     // routing key
-		false,  // mandatory
-		false,  // immediate
-		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte("export_xlsx"),
-		})
-
-	if failOnError(c, err) {
-		return
-	}
-
-	log.Printf(" [x] Sent %s", "export_xlsx")
-
-	path := "./_rabbitmq"
 	c.JSON(200, gin.H{
 		"code": 200,
-		"data": path,
+		"data": xlsxResponse.Path,
 	})
 }

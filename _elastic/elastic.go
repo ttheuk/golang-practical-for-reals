@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/olivere/elastic/v7"
 )
 
@@ -107,4 +108,46 @@ func Search(keyword string) []uint64 {
 	}
 
 	return ids
+}
+
+// Export excel
+func ExportXLSX(info *pb.XlsxRequest) (*pb.XlsxResponse, error) {
+	f := excelize.NewFile()
+	// Create a new sheet.
+	// index := f.NewSheet("Sheet2")
+
+	// Set value for fist row.
+	f.SetCellValue("Sheet1", "A1", "ID")
+	f.SetCellValue("Sheet1", "B1", "Name")
+	f.SetCellValue("Sheet1", "C1", "Age")
+
+	for i, obj := range info.Students {
+		index := strconv.Itoa(i + 2)
+		f.SetCellValue("Sheet1", "A"+index, obj.Id)
+		f.SetCellValue("Sheet1", "B"+index, obj.Name)
+		f.SetCellValue("Sheet1", "C"+index, obj.Age)
+	}
+
+	// Set active sheet
+	f.SetActiveSheet(0)
+
+	// Save xlsx file by the given path.
+	if info.Path != "" {
+		info.Path = info.Path + "/"
+	}
+
+	actualPath := info.Path + info.FileName
+	if err := f.SaveAs(actualPath); err != nil {
+		return &pb.XlsxResponse{
+				Path:    actualPath,
+				Message: "fail",
+			},
+			err
+	}
+
+	return &pb.XlsxResponse{
+			Path:    actualPath,
+			Message: "successful",
+		},
+		nil
 }
