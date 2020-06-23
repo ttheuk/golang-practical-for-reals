@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"entity"
 	"fmt"
 	"log"
 	pb "rpc"
@@ -112,6 +113,13 @@ func Search(keyword string) []uint64 {
 
 // Export excel
 func ExportXLSX(info *pb.XlsxRequest) (*pb.XlsxResponse, error) {
+	// Thay bằng code lấy data
+	s1 := entity.Student{Name: "the", Age: 20}
+	s2 := entity.Student{Name: "thanh", Age: 22}
+	s3 := entity.Student{Name: "nguyen", Age: 21}
+
+	list := entity.ListStudent{s1, s2, s3}
+
 	f := excelize.NewFile()
 	// Create a new sheet.
 	// index := f.NewSheet("Sheet2")
@@ -121,9 +129,9 @@ func ExportXLSX(info *pb.XlsxRequest) (*pb.XlsxResponse, error) {
 	f.SetCellValue("Sheet1", "B1", "Name")
 	f.SetCellValue("Sheet1", "C1", "Age")
 
-	for i, obj := range info.Students {
+	for i, obj := range list {
 		index := strconv.Itoa(i + 2)
-		f.SetCellValue("Sheet1", "A"+index, obj.Id)
+		// f.SetCellValue("Sheet1", "A"+index, obj.ID)
 		f.SetCellValue("Sheet1", "B"+index, obj.Name)
 		f.SetCellValue("Sheet1", "C"+index, obj.Age)
 	}

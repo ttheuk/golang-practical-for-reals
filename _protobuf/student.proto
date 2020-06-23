@@ -25,12 +25,6 @@ message IndexStudentResponse {
 }
 
 message XlsxRequest {
-  message Student {
-    string name = 1;
-    int32 age = 2;
-    string id = 3;
-  }
-  repeated Student students= 4;
   string path = 5;
   string fileName = 6;
 }

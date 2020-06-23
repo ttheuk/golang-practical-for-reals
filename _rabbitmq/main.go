@@ -22,44 +22,16 @@ func main() {
 	failOnError(err, "Failed to open a channel")
 	defer ch.Close()
 
-	err = ch.ExchangeDeclare(
-		"logs",   // name
-		"fanout", // type
-		true,     // durable
-		false,    // auto-deleted
-		false,    // internal
-		false,    // no-wait
-		nil,      // arguments
-	)
+	err = ch.ExchangeDeclare("logs", "fanout", true, false, false, false, nil)
 	failOnError(err, "Failed to declare an exchange")
 
-	q, err := ch.QueueDeclare(
-		"",    // name
-		false, // durable
-		false, // delete when unused
-		true,  // exclusive
-		false, // no-wait
-		nil,   // arguments
-	)
+	q, err := ch.QueueDeclare("", false, false, true, false, nil)
 	failOnError(err, "Failed to declare a queue")
 
-	err = ch.QueueBind(
-		q.Name, // queue name
-		"",     // routing key
-		"logs", // exchange
-		false,
-		nil)
+	err = ch.QueueBind(q.Name, "", "logs", false, nil)
 	failOnError(err, "Failed to bind a queue")
 
-	msgs, err := ch.Consume(
-		q.Name, // queue
-		"",     // consumer
-		true,   // auto-ack
-		false,  // exclusive
-		false,  // no-local
-		false,  // no-wait
-		nil,    // args
-	)
+	msgs, err := ch.Consume(q.Name, "", true, false, false, false, nil)
 	failOnError(err, "Failed to register a consumer")
 
 	go func() {
@@ -67,8 +39,8 @@ func main() {
 			switch string(d.Body) {
 			case "export_xlsx":
 				{
-					fmt.Println("export")
-					s.ExportXLSX()
+					fmt.Println("ex")
+					ExportXLSX(d.Body)
 				}
 			}
 		}
@@ -77,4 +49,25 @@ func main() {
 	forever := make(chan bool)
 	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 	<-forever
+}
+
+func ExportXLSX(body []byte) error {
+	// var value string
+	// err := json.Unmarshal(body, value)
+	// failOnError(err, "fail to unmarshal message")
+	// // Tạo client để gọi phương thức từ RPC
+
+	// client := pb.NewStudentClient(h.conn)
+	// ctx := context.Background()
+
+	// xlsxRequest := pb.XlsxRequest{
+	// 	Students: []*pb.XlsxRequest_Student{&s1, &s2, &s3},
+	// 	Path:     path,
+	// 	FileName: fileName,
+	// }
+
+	// // Gọi hàm tìm kiếm student từ RPC
+	// xlsxResponse, err := client.ExportXLSX(ctx, &xlsxRequest)
+	// failOnError(c, err)
+	return nil
 }

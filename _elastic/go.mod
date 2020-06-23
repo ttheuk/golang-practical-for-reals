@@ -4,7 +4,10 @@ go 1.13
 
 replace rpc => ../_protobuf
 
+replace entity => ../entity
+
 require (
+	entity v0.0.0-00010101000000-000000000000
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1
 	github.com/olivere/elastic v6.2.31+incompatible
 	github.com/olivere/elastic/v7 v7.0.15

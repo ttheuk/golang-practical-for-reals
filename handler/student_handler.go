@@ -2,12 +2,14 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 	"entity"
 	"fmt"
 	"repository/student"
 	pb "rpc"
 
 	"github.com/gin-gonic/gin"
+	"github.com/streadway/amqp"
 	"google.golang.org/grpc"
 )
 
@@ -27,6 +29,13 @@ func failOnError(c *gin.Context, err error) bool {
 type StudentHandler struct {
 	service student.Service
 	conn    *grpc.ClientConn
+}
+
+type XlsxRequest struct {
+	Type     string
+	Path     string
+	FileName string
+	Data     string
 }
 
 func NewStudentHandler(repo student.StudentRepository, rpc *grpc.ClientConn) *StudentHandler {
@@ -99,44 +108,6 @@ func (h *StudentHandler) CreateStudent(c *gin.Context) {
 }
 
 func (h *StudentHandler) ExportXLSX(c *gin.Context) {
-
-	// conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	// if failOnError(c, err) {
-	// 	return
-	// }
-
-	// defer conn.Close()
-
-	// ch, err := conn.Channel()
-	// if failOnError(c, err) {
-	// 	return
-	// }
-
-	// defer ch.Close()
-
-	// err = ch.ExchangeDeclare("logs", "fanout", true, false, false, false, nil)
-
-	// if failOnError(c, err) {
-	// 	return
-	// }
-
-	// err = ch.Publish(
-	// 	"logs", // exchange
-	// 	"",     // routing key
-	// 	false,  // mandatory
-	// 	false,  // immediate
-	// 	amqp.Publishing{
-	// 		ContentType: "text/plain",
-	// 		Body:        []byte("export_xlsx"),
-	// 	})
-
-	// if failOnError(c, err) {
-	// 	return
-	// }
-
-	// log.Printf(" [x] Sent %s", "export_xlsx")
-
-	// Tạo client để gọi phương thức từ RPC
 	path := c.Query("path")
 	fileName := c.Query("file-name")
 
@@ -144,28 +115,51 @@ func (h *StudentHandler) ExportXLSX(c *gin.Context) {
 		fileName = "demo_project_file.xlsx"
 	}
 
-	client := pb.NewStudentClient(h.conn)
-	ctx := context.Background()
+	//------------------------------------------
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	if failOnError(c, err) {
+		return
+	}
 
-	s1 := pb.XlsxRequest_Student{Id: "sss", Name: "the", Age: 20}
-	s2 := pb.XlsxRequest_Student{Id: "eee", Name: "thanh", Age: 22}
-	s3 := pb.XlsxRequest_Student{Id: "ddd", Name: "nguyen", Age: 21}
+	defer conn.Close()
 
-	xlsxRequest := pb.XlsxRequest{
-		// Name:     "name",
-		// Age:      4,
-		// Id:       "idnesss",
-		Students: []*pb.XlsxRequest_Student{&s1, &s2, &s3},
+	ch, err := conn.Channel()
+	if failOnError(c, err) {
+		return
+	}
+
+	defer ch.Close()
+
+	err = ch.ExchangeDeclare("logs", "fanout", true, false, false, false, nil)
+
+	if failOnError(c, err) {
+		return
+	}
+
+	body := XlsxRequest{
+		Type:     "export_xlsx",
 		Path:     path,
 		FileName: fileName,
 	}
+	jsonBody, err := json.Marshal(body)
 
-	// Gọi hàm tìm kiếm student từ RPC
-	xlsxResponse, err := client.ExportXLSX(ctx, &xlsxRequest)
-	failOnError(c, err)
+	if failOnError(c, err) {
+		return
+	}
+
+	err = ch.Publish("logs", "", false, false,
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        jsonBody,
+		})
+
+	if failOnError(c, err) {
+		return
+	}
+	// ----------------------------------------------
 
 	c.JSON(200, gin.H{
 		"code": 200,
-		"data": xlsxResponse.Path,
+		"data": "sent request successful",
 	})
 }
