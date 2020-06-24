@@ -1,4 +1,4 @@
-module source/golang-practical-for-reals/cmd/server
+module source/golang-practical-for-reals/_main_server/cmd/server
 
 go 1.13
 
@@ -8,7 +8,7 @@ replace handler => ./../../handler
 
 replace repository/student => ./../../repository/student
 
-replace rpc => ../../_protobuf
+replace rpc => ../../../_protobuf
 
 require (
 	entity v0.0.0

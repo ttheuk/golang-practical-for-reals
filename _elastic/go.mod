@@ -4,7 +4,7 @@ go 1.13
 
 replace rpc => ../_protobuf
 
-replace entity => ../entity
+replace entity => ../_main_server/entity
 
 require (
 	entity v0.0.0-00010101000000-000000000000

@@ -3,7 +3,7 @@ syntax = "proto3";
 service Student {
   rpc SearchStudent (StudentRequest) returns (StudentResponse);
   rpc IndexStudent (IndexStudentRequest) returns (IndexStudentResponse);
-  rpc ExportXLSX(XlsxRequest) returns (XlsxResponse);
+  // rpc ExportXLSX(XlsxRequest) returns (XlsxResponse);
 }
 
 message StudentRequest {
@@ -29,7 +29,9 @@ message XlsxRequest {
   string fileName = 6;
 }
 
+/*
 message XlsxResponse {
   string message = 1;
   string path = 2;
 }
+*/

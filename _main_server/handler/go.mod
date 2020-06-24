@@ -1,8 +1,8 @@
-module source/golang-practical-for-reals/handler
+module source/golang-practical-for-reals/_main_server/handler
 
 go 1.13
 
-replace rpc => ../_protobuf
+replace rpc => ../../_protobuf
 
 replace entity => ./../entity
 

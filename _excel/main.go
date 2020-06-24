@@ -1,16 +1,27 @@
 package main
 
 import (
-	"fmt"
+	"_excel/excel"
+	"encoding/json"
 	"log"
+	pb "rpc"
 
 	"github.com/streadway/amqp"
 )
 
-func failOnError(err error, msg string) {
+var excelService *excel.Service
+
+func failOnError(err error, msg string) bool {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)
+		return true
 	}
+	return false
+}
+
+func init() {
+	excelRepo := excel.NewExcelRepository()
+	excelService = excel.NewService(excelRepo)
 }
 
 func main() {
@@ -36,38 +47,18 @@ func main() {
 
 	go func() {
 		for d := range msgs {
-			switch string(d.Body) {
-			case "export_xlsx":
-				{
-					fmt.Println("ex")
-					ExportXLSX(d.Body)
-				}
+			r := pb.XlsxRequest{}
+			err := json.Unmarshal(d.Body, &r)
+			if failOnError(err, "[x] Unmashal fail") {
+				return
 			}
+
+			err = excelService.ExportXLSX(&r)
+			failOnError(err, "[x] Fail to export file at: "+r.Path+"/"+r.FileName)
 		}
 	}()
 
 	forever := make(chan bool)
-	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+	log.Printf("[*] Waiting for messages. To exit press CTRL+C")
 	<-forever
-}
-
-func ExportXLSX(body []byte) error {
-	// var value string
-	// err := json.Unmarshal(body, value)
-	// failOnError(err, "fail to unmarshal message")
-	// // Tạo client để gọi phương thức từ RPC
-
-	// client := pb.NewStudentClient(h.conn)
-	// ctx := context.Background()
-
-	// xlsxRequest := pb.XlsxRequest{
-	// 	Students: []*pb.XlsxRequest_Student{&s1, &s2, &s3},
-	// 	Path:     path,
-	// 	FileName: fileName,
-	// }
-
-	// // Gọi hàm tìm kiếm student từ RPC
-	// xlsxResponse, err := client.ExportXLSX(ctx, &xlsxRequest)
-	// failOnError(c, err)
-	return nil
 }

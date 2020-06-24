@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"repository/student"
 	pb "rpc"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/streadway/amqp"
@@ -29,13 +31,6 @@ func failOnError(c *gin.Context, err error) bool {
 type StudentHandler struct {
 	service student.Service
 	conn    *grpc.ClientConn
-}
-
-type XlsxRequest struct {
-	Type     string
-	Path     string
-	FileName string
-	Data     string
 }
 
 func NewStudentHandler(repo student.StudentRepository, rpc *grpc.ClientConn) *StudentHandler {
@@ -108,11 +103,14 @@ func (h *StudentHandler) CreateStudent(c *gin.Context) {
 }
 
 func (h *StudentHandler) ExportXLSX(c *gin.Context) {
-	path := c.Query("path")
-	fileName := c.Query("file-name")
+	path := strings.TrimSpace(c.Query("path"))
+	fileName := strings.TrimSpace(c.Query("file-name"))
+	fileName += ".xlsx"
 
-	if fileName == "" {
-		fileName = "demo_project_file.xlsx"
+	if fileName == ".xlsx" {
+		now := time.Now()
+		timeStamp := now.UnixNano()
+		fileName = "student_" + fmt.Sprint(timeStamp) + ".xlsx"
 	}
 
 	//------------------------------------------
@@ -120,46 +118,37 @@ func (h *StudentHandler) ExportXLSX(c *gin.Context) {
 	if failOnError(c, err) {
 		return
 	}
-
 	defer conn.Close()
 
 	ch, err := conn.Channel()
 	if failOnError(c, err) {
 		return
 	}
-
 	defer ch.Close()
 
 	err = ch.ExchangeDeclare("logs", "fanout", true, false, false, false, nil)
-
 	if failOnError(c, err) {
 		return
 	}
 
-	body := XlsxRequest{
-		Type:     "export_xlsx",
+	r := pb.XlsxRequest{
 		Path:     path,
 		FileName: fileName,
 	}
-	jsonBody, err := json.Marshal(body)
 
+	body, err := json.Marshal(r)
 	if failOnError(c, err) {
 		return
 	}
 
-	err = ch.Publish("logs", "", false, false,
-		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        jsonBody,
-		})
-
+	err = ch.Publish("logs", "", false, false, amqp.Publishing{ContentType: "text/plain", Body: body})
 	if failOnError(c, err) {
 		return
 	}
 	// ----------------------------------------------
 
 	c.JSON(200, gin.H{
-		"code": 200,
-		"data": "sent request successful",
+		"code":    200,
+		"message": "File saved at: " + r.Path + "/" + r.FileName,
 	})
 }
