@@ -13,7 +13,6 @@ func init() {
 		return
 	}
 	fmt.Println("=> initiate server: successful")
-
 }
 
 func main() {

@@ -59,12 +59,5 @@ func SetupServer() error {
 		return err
 	}
 	fmt.Println("[*] migrate DB: done")
-
-	err = ConnectRPC()
-	if err != nil {
-		return err
-	}
-	fmt.Println("[*] connect rpc: done")
-
 	return nil
 }

@@ -33,7 +33,7 @@ func (s *StudentRepository) Delete(id uint64) error {
 	return s.db.Where("id = ?", id).Delete(&entity.Student{}).Error
 }
 
-func (s *StudentRepository) ExportXLSX() (*entity.ListStudent, error) {
+func (s *StudentRepository) FindAll() (*entity.ListStudent, error) {
 	var list entity.ListStudent
 	if err := s.db.Find(&list).Error; err != nil {
 		return nil, err

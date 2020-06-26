@@ -18,7 +18,7 @@ google.golang.org/grpc v1.29.1 <br>
 google.golang.org/protobuf v1.24.0 <br>
 
 # Chạy server
-`cd ./_main_server/cmd/server && go run .`
+`cd ./_app/cmd/server && go run .`
 <br>
 `cd ./_elastic_/ && go run .`
 <br>

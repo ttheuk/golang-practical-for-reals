@@ -1,8 +1,8 @@
-module _excel/excel
+module _excel/student
 
 replace rpc => ./../../_protobuf
 
-replace entity => ./../../_main_server/entity
+replace entity => ./../../_app/entity
 
 go 1.13
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"_excel/excel"
+	"_excel/student"
 	"encoding/json"
 	"log"
 	pb "rpc"
@@ -20,8 +20,8 @@ func failOnError(err error, msg string) bool {
 }
 
 func init() {
-	excelRepo := excel.NewExcelRepository()
-	excelService = excel.NewService(excelRepo)
+	excelRepo := student.NewExcelRepository()
+	excelService = student.NewService(excelRepo)
 }
 
 func main() {

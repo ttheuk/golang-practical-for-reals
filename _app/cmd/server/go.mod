@@ -1,12 +1,12 @@
-module source/golang-practical-for-reals/_main_server/cmd/server
+module source/golang-practical-for-reals/_app/cmd/server
 
 go 1.13
 
-replace entity => ./../../entity
-
 replace handler => ./../../handler
 
-replace repository/student => ./../../repository/student
+replace entity => ../../entity
+
+replace repository/student => ../../repository/student
 
 replace rpc => ../../../_protobuf
 

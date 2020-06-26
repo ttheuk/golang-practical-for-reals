@@ -1,4 +1,4 @@
-package excel
+package student
 
 import pb "rpc"
 

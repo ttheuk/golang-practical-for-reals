@@ -1,4 +1,4 @@
-package excel
+package student
 
 import (
 	"entity"
@@ -18,6 +18,9 @@ func NewExcelRepository() *ExcelRepository {
 }
 
 func (repo *ExcelRepository) ExportXLSX(r *pb.XlsxRequest) error {
+	client := pb.NewStudentClient(h.conn)
+	ctx := context.Background()
+	
 	// Thay bằng code lấy data
 	s1 := entity.Student{Name: "the", Age: 20}
 	s2 := entity.Student{Name: "thanh", Age: 22}
@@ -26,9 +29,6 @@ func (repo *ExcelRepository) ExportXLSX(r *pb.XlsxRequest) error {
 	list := entity.ListStudent{s1, s2, s3}
 
 	f := excelize.NewFile()
-	// Create a new sheet.
-	// index := f.NewSheet("Sheet2")
-
 	// Set value for fist row.
 	f.SetCellValue("Sheet1", "A1", "ID")
 	f.SetCellValue("Sheet1", "B1", "Name")
@@ -44,7 +44,7 @@ func (repo *ExcelRepository) ExportXLSX(r *pb.XlsxRequest) error {
 	// Set active sheet
 	f.SetActiveSheet(0)
 
-	// Save xlsx file by the given path.
+	// Save xlsx file by the given path
 	if r.Path != "" {
 		r.Path = r.Path + "/"
 	}

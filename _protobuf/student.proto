@@ -3,7 +3,10 @@ syntax = "proto3";
 service Student {
   rpc SearchStudent (StudentRequest) returns (StudentResponse);
   rpc IndexStudent (IndexStudentRequest) returns (IndexStudentResponse);
-  // rpc ExportXLSX(XlsxRequest) returns (XlsxResponse);
+}
+
+service Excel {
+  rpc GetAllStudent (Empty) returns (AllStudentResponse);
 }
 
 message StudentRequest {
@@ -25,13 +28,20 @@ message IndexStudentResponse {
 }
 
 message XlsxRequest {
-  string path = 5;
-  string fileName = 6;
+  string path = 1;
+  string fileName = 2;
 }
 
-/*
-message XlsxResponse {
-  string message = 1;
-  string path = 2;
+message AllStudentResponse {
+  message StudentStruct {
+    int64 id = 1;
+    string name = 2;
+    int32 age = 3;
+    int64 createdAt = 4;
+    int64 updatedAt = 5;
+    int64 deletedAt = 6;
+  }
+  repeated StudentStruct students = 1;
 }
-*/
+
+message Empty{}

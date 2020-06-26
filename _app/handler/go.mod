@@ -1,4 +1,4 @@
-module source/golang-practical-for-reals/_main_server/handler
+module source/golang-practical-for-reals/_app/handler
 
 go 1.13
 
