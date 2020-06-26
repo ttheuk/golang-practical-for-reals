@@ -24,6 +24,7 @@ func (s *server) SearchStudent(ctx context.Context, r *pb.StudentRequest) (*pb.S
 
 func (s *server) IndexStudent(ctx context.Context, r *pb.IndexStudentRequest) (*pb.IndexStudentResponse, error) {
 	CreateIndex(r)
+
 	data := pb.IndexStudentResponse{
 		Message: r.Name + fmt.Sprint(r.Age),
 	}

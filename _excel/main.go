@@ -3,13 +3,25 @@ package main
 import (
 	"_excel/student"
 	"encoding/json"
+	"fmt"
 	"log"
 	pb "rpc"
 
 	"github.com/streadway/amqp"
+	"google.golang.org/grpc"
 )
 
-var excelService *excel.Service
+var (
+	excelService *student.Service
+	rpc          *grpc.ClientConn
+	dataAdd      = "localhost:5000"
+)
+
+func ConnectRPC() error {
+	var err error
+	rpc, err = grpc.Dial(dataAdd, grpc.WithInsecure(), grpc.WithBlock())
+	return err
+}
 
 func failOnError(err error, msg string) bool {
 	if err != nil {
@@ -20,8 +32,13 @@ func failOnError(err error, msg string) bool {
 }
 
 func init() {
+	if err := ConnectRPC(); err != nil {
+		fmt.Println("[x] (_excel/main.go:36) fail to connect to database RPC server /n[detail] " + err.Error())
+		return
+	}
+
 	excelRepo := student.NewExcelRepository()
-	excelService = student.NewService(excelRepo)
+	excelService = student.NewService(excelRepo, rpc)
 }
 
 func main() {

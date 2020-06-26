@@ -1,12 +1,14 @@
 package student
 
 import (
-	"entity"
+	"context"
 	pb "rpc"
 	"strconv"
+	"time"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/jinzhu/gorm"
+	"google.golang.org/grpc"
 )
 
 type ExcelRepository struct {
@@ -17,28 +19,31 @@ func NewExcelRepository() *ExcelRepository {
 	return &ExcelRepository{}
 }
 
-func (repo *ExcelRepository) ExportXLSX(r *pb.XlsxRequest) error {
-	client := pb.NewStudentClient(h.conn)
+func (repo *ExcelRepository) ExportXLSX(r *pb.XlsxRequest, conn *grpc.ClientConn) error {
+	client := pb.NewExcelClient(conn)
 	ctx := context.Background()
-	
-	// Thay bằng code lấy data
-	s1 := entity.Student{Name: "the", Age: 20}
-	s2 := entity.Student{Name: "thanh", Age: 22}
-	s3 := entity.Student{Name: "nguyen", Age: 21}
 
-	list := entity.ListStudent{s1, s2, s3}
+	// Lấy data từ server chính
+	list, err := client.GetAllStudent(ctx, &pb.Empty{})
 
+	// Tạo file excel
 	f := excelize.NewFile()
+
 	// Set value for fist row.
 	f.SetCellValue("Sheet1", "A1", "ID")
 	f.SetCellValue("Sheet1", "B1", "Name")
 	f.SetCellValue("Sheet1", "C1", "Age")
+	f.SetCellValue("Sheet1", "D1", "Created at")
+	f.SetCellValue("Sheet1", "E1", "Updated at")
 
-	for i, obj := range list {
+	for i, obj := range list.Students {
+
 		index := strconv.Itoa(i + 2)
-		// f.SetCellValue("Sheet1", "A"+index, obj.ID)
+		f.SetCellValue("Sheet1", "A"+index, obj.Id)
 		f.SetCellValue("Sheet1", "B"+index, obj.Name)
 		f.SetCellValue("Sheet1", "C"+index, obj.Age)
+		f.SetCellValue("Sheet1", "D"+index, (time.Unix(0, obj.CreatedAt).Format("02/01/2006, 15:04:05")))
+		f.SetCellValue("Sheet1", "E"+index, (time.Unix(0, obj.UpdatedAt).Format("02/01/2006, 15:04:05")))
 	}
 
 	// Set active sheet
@@ -50,6 +55,6 @@ func (repo *ExcelRepository) ExportXLSX(r *pb.XlsxRequest) error {
 	}
 
 	actualPath := r.Path + r.FileName
-	err := f.SaveAs(actualPath)
+	err = f.SaveAs(actualPath)
 	return err
 }
