@@ -27,3 +27,21 @@ google.golang.org/protobuf v1.24.0 <br>
 <br>
 `cd ./_excel/ && go run .`
 
+# Chạy server
+Test API:
+Search
+`GET http://localhost:8080/students?keyword=some_keyword`
+
+Create
+`POST http://localhost:8080/students`
+JSON
+```
+{
+	"name": "Lữ Gia",
+	"age": 21
+}
+```
+
+Export excel
+`GET http://localhost:8080/students/excel?path=some_path&file-name=some_name`
+
