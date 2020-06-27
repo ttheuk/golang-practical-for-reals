@@ -21,7 +21,7 @@ google.golang.org/protobuf v1.24.0 <br>
 # Chạy server
 `cd ./_app/cmd/server && go run .`
 <br>
-`cd ./_app/rpc_server && go run .`
+`cd ./_app/cmd/rpc_server && go run .`
 <br>
 `cd ./_elastic_/ && go run .`
 <br>
