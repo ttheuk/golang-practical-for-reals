@@ -32,12 +32,11 @@ google.golang.org/protobuf v1.24.0 <br>
 `GET http://localhost:8080/students?keyword=some_keyword`
 
 **Create** <br>
-`POST http://localhost:8080/students`
-JSON
-```
+```POST http://localhost:8080/students
+Bpdy
 {
-	"name": "Lữ Gia",
-	"age": 21
+   "name": "Lữ Gia",
+   "age": 21
 }
 ```
 
