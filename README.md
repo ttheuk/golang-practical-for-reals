@@ -27,12 +27,11 @@ google.golang.org/protobuf v1.24.0 <br>
 <br>
 `cd ./_excel/ && go run .`
 
-# Chạy server
-Test API:
-Search
+# Test API
+**Search** <br>
 `GET http://localhost:8080/students?keyword=some_keyword`
 
-Create
+**Create** <br>
 `POST http://localhost:8080/students`
 JSON
 ```
@@ -42,6 +41,6 @@ JSON
 }
 ```
 
-Export excel
+**Export excel** <br>
 `GET http://localhost:8080/students/excel?path=some_path&file-name=some_name`
 
