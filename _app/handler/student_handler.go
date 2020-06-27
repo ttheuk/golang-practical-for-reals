@@ -93,7 +93,6 @@ func (h *StudentHandler) CreateStudent(c *gin.Context) {
 	ctx := context.Background()
 
 	// Gọi hàm tìm kiếm student từ RPC
-
 	indexResponse, err := client.IndexStudent(ctx, &indexRequest)
 	fmt.Println(indexResponse)
 
