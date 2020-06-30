@@ -2,8 +2,8 @@ package main
 
 import (
 	"entity"
+	"errors"
 	"fmt"
-	"log"
 
 	"github.com/jinzhu/gorm"
 )
@@ -19,50 +19,41 @@ const (
 
 var db *gorm.DB
 
-func Migrate() error {
-	if err := db.DB().Ping(); err != nil {
-		return err
+func failOnError(err error, message string) bool {
+	if err != nil {
+		fmt.Println("[x] " + message)
+		fmt.Println("[detail] " + err.Error())
+		return true
+	}
+	return false
+}
+
+func Migrate() bool {
+	err := db.DB().Ping()
+	if failOnError(err, "no database connection") {
+		return false
 	}
 
 	db.AutoMigrate(
 		&entity.Student{},
 	)
-
-	return nil
+	return true
 }
 
-func ConnectDB() error {
+func ConnectDB() bool {
 	// tạo kết nối đến postgreSQL
 	var err error
 	connectionString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s", host, port, user, dbname, password, sslmode)
 	db, err = gorm.Open("postgres", connectionString)
-
-	if err != nil {
-		log.Print(err)
-		return err
-	}
-
-	return nil
+	return failOnError(err, "fail to connect to database")
 }
 
-func SetupServer() error {
-	err := ConnectDB()
-	// defer db.Close()
+func SetupDB() error {
+	if !ConnectDB() || !Migrate() {
+		return errors.New("[x] setup server failed")
+	}
 	fmt.Println("[*] connect DB: done")
-
-	if err != nil {
-		return err
-	}
-
-	err = Migrate()
-	if err != nil {
-		return err
-	}
-
-	if err := ConnectRPC(); err != nil {
-		return err
-	}
-
 	fmt.Println("[*] migrate DB: done")
+
 	return nil
 }

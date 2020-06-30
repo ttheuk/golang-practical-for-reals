@@ -9,7 +9,7 @@ var (
 	elasticAdd = "localhost:8081"
 )
 
-func ConnectRPC() error {
+func ConnectElasticRPC() error {
 	var err error
 	rpc, err = grpc.Dial(elasticAdd, grpc.WithInsecure(), grpc.WithBlock())
 	return err

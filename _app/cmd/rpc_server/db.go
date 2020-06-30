@@ -41,6 +41,9 @@ func ConnectDB() error {
 		log.Print(err)
 		return err
 	}
-
 	return nil
+}
+
+func SetupDB() error {
+	return ConnectDB()
 }
