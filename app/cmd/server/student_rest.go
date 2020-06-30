@@ -2,14 +2,12 @@ package main
 
 import (
 	"handler"
-	"repository/student"
 
 	"github.com/gin-gonic/gin"
 )
 
 func NewStudentHandler(e *gin.Engine) *gin.Engine {
-	repo := student.NewStudentRepository(db)
-	h := handler.NewStudentHandler(*repo, rpc)
+	h := handler.NewStudentHandler(rabbitConn, elasticConn, localConn)
 
 	e.GET("/students", h.GetStudents)
 	e.GET("/students/xlsx", h.ExportXLSX)

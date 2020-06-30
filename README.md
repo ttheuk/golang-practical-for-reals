@@ -19,11 +19,11 @@ google.golang.org/grpc v1.29.1 <br>
 google.golang.org/protobuf v1.24.0 <br>
 
 # Chạy server
-`cd ./_app/cmd/server && go run .`
+`cd ./app/cmd/server && go run .`
 <br>
-`cd ./_app/cmd/rpc_server && go run .`
+`cd ./app/cmd/rpc_server && go run .`
 <br>
-`cd ./_elastic_/ && go run .`
+`cd ./elastic_/ && go run .`
 <br>
 `cd ./_excel/ && go run .`
 

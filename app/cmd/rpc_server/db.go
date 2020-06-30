@@ -4,6 +4,7 @@ import (
 	"entity"
 	"errors"
 	"fmt"
+	"repository/student"
 
 	"github.com/jinzhu/gorm"
 )
@@ -17,7 +18,10 @@ const (
 	sslmode  = "disable"
 )
 
-var db *gorm.DB
+var (
+	db             *gorm.DB
+	studentService *student.Service
+)
 
 func failOnError(err error, message string) bool {
 	if err != nil {
@@ -45,7 +49,7 @@ func ConnectDB() bool {
 	var err error
 	connectionString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s", host, port, user, dbname, password, sslmode)
 	db, err = gorm.Open("postgres", connectionString)
-	return failOnError(err, "fail to connect to database")
+	return !failOnError(err, "fail to connect to database")
 }
 
 func SetupDB() error {

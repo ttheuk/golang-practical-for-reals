@@ -1,4 +1,4 @@
-module source/golang-practical-for-reals/_protobuf
+module source/golang-practical-for-reals/protobuf
 
 go 1.13
 

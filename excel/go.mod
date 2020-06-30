@@ -1,8 +1,8 @@
-module source/golang-practical-for-reals/_excel
+module source/golang-practical-for-reals/excel
 
 go 1.13
 
-replace rpc => ../_protobuf
+replace rpc => ../protobuf
 
 replace _excel/student => ./student
 

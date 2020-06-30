@@ -1,8 +1,8 @@
-module source/golang-practical-for-reals/_elastic
+module source/golang-practical-for-reals/elastic
 
 go 1.13
 
-replace rpc => ../_protobuf
+replace rpc => ../protobuf
 
 require (
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1

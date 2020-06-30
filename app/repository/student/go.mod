@@ -1,4 +1,4 @@
-module repository/_app/student
+module repository/app/student
 
 go 1.13
 

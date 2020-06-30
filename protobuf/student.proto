@@ -7,6 +7,8 @@ service Student {
 
 service Excel {
   rpc GetAllStudent (Empty) returns (AllStudentResponse);
+  rpc Create (StudentStruct) returns (StudentStruct);
+  rpc GetAllById (StudentResponse) returns (AllStudentResponse);
 }
 
 message StudentRequest {
@@ -43,5 +45,14 @@ message AllStudentResponse {
   }
   repeated StudentStruct students = 1;
 }
+
+message StudentStruct {
+    int64 id = 1;
+    string name = 2;
+    int32 age = 3;
+    int64 createdAt = 4;
+    int64 updatedAt = 5;
+    int64 deletedAt = 6;
+  }
 
 message Empty{}

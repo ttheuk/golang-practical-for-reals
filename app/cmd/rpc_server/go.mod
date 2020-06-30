@@ -1,8 +1,8 @@
-module source/golang-practical-for-reals/_app/rpc_server
+module source/golang-practical-for-reals/app/rpc_server
 
 go 1.13
 
-replace rpc => ../../../_protobuf
+replace rpc => ../../../protobuf
 
 replace repository/student => ../../repository/student
 

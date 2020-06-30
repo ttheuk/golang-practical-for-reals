@@ -8,17 +8,17 @@ import (
 )
 
 func init() {
-	if err := SetupDB(); err != nil {
+	if err := ConnectRPC(); err != nil {
 		log.Print(err)
 		return
 	}
-	fmt.Println("=> connect to database: successful")
+	fmt.Println("=> connect to rpc servers: successful")
 
-	if err := ConnectElasticRPC(); err != nil {
+	if err := ConnectRabbit(); err != nil {
 		log.Print(err)
 		return
 	}
-	fmt.Println("=> connect to elastic server: successful")
+	fmt.Println("=> connect to rabbitmq server: successful")
 }
 
 func main() {

@@ -3,9 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"entity"
 	"fmt"
-	"repository/student"
 	pb "rpc"
 	"strings"
 	"time"
@@ -29,45 +27,50 @@ func failOnError(c *gin.Context, err error) bool {
 //-----------------------------------
 
 type StudentHandler struct {
-	service student.Service
-	conn    *grpc.ClientConn
+	rabbitConn  *amqp.Connection
+	elasticConn *grpc.ClientConn
+	localConn   *grpc.ClientConn
 }
 
-func NewStudentHandler(repo student.StudentRepository, rpc *grpc.ClientConn) *StudentHandler {
+func NewStudentHandler(rabbit *amqp.Connection, elasticRPC *grpc.ClientConn, localRPC *grpc.ClientConn) *StudentHandler {
 	return &StudentHandler{
-		service: *student.NewService(repo),
-		conn:    rpc,
+		rabbitConn:  rabbit,
+		elasticConn: elasticRPC,
+		localConn:   localRPC,
 	}
 }
 
 func (h *StudentHandler) GetStudents(c *gin.Context) {
-	// Tạo client để gọi phương thức từ RPC
-	client := pb.NewStudentClient(h.conn)
+	client := pb.NewExcelClient(h.localConn)
+	client2 := pb.NewStudentClient(h.elasticConn)
 	ctx := context.Background()
 
-	// for search
 	studentRequest := pb.StudentRequest{
 		Keyword: c.Query("keyword"),
 	}
 
-	// Gọi hàm tìm kiếm student từ RPC
-	studentResponse, err := client.SearchStudent(ctx, &studentRequest)
+	studentResponse, err := client2.SearchStudent(ctx, &studentRequest)
+	if failOnError(c, err) {
+		return
+	}
 
-	// Lấy danh sách student trong database theo các id nhận được
-	data, err := h.service.GetAllById(studentResponse.Ids)
-
+	list, err := client.GetAllById(ctx, studentResponse)
 	if failOnError(c, err) {
 		return
 	}
 
 	c.JSON(200, gin.H{
 		"code": 200,
-		"data": data,
+		"data": list.Students,
 	})
 }
 
 func (h *StudentHandler) CreateStudent(c *gin.Context) {
-	student := entity.Student{}
+	client := pb.NewExcelClient(h.localConn)
+	client2 := pb.NewStudentClient(h.elasticConn)
+	ctx := context.Background()
+
+	student := pb.StudentStruct{}
 	if err := c.ShouldBind(&student); err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -76,24 +79,19 @@ func (h *StudentHandler) CreateStudent(c *gin.Context) {
 		return
 	}
 
-	err := h.service.Create(&student)
-
+	data, err := client.Create(ctx, &student)
 	if failOnError(c, err) {
 		return
 	}
 
 	indexRequest := pb.IndexStudentRequest{
-		Name: student.Name,
-		Age:  (int32)(student.Age),
-		Id:   fmt.Sprint(student.ID),
+		Name: data.Name,
+		Age:  (int32)(data.Age),
+		Id:   fmt.Sprint(data.Id),
 	}
 
-	// Tạo client để gọi phương thức từ RPC
-	client := pb.NewStudentClient(h.conn)
-	ctx := context.Background()
-
 	// Gọi hàm tìm kiếm student từ RPC
-	indexResponse, err := client.IndexStudent(ctx, &indexRequest)
+	indexResponse, err := client2.IndexStudent(ctx, &indexRequest)
 	fmt.Println(indexResponse)
 
 	c.JSON(200, gin.H{
@@ -113,14 +111,7 @@ func (h *StudentHandler) ExportXLSX(c *gin.Context) {
 		fileName = "student_" + fmt.Sprint(timeStamp) + ".xlsx"
 	}
 
-	//------------------------------------------
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	if failOnError(c, err) {
-		return
-	}
-	defer conn.Close()
-
-	ch, err := conn.Channel()
+	ch, err := h.rabbitConn.Channel()
 	if failOnError(c, err) {
 		return
 	}
